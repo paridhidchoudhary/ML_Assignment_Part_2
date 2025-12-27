@@ -1,0 +1,96 @@
+{
+  "metadata": {
+    "dataset_name": "Juspay ML Assignment - Code Dataset",
+    "version": "1.0",
+    "creation_date": "2025-01-24",
+    "created_by": "Paridhi Choudhary"
+  },
+  "source_data": {
+    "repository": "https://github.com/psf/requests",
+    "data_type": "Python source code files",
+    "file_selection_criteria": [
+      "Only .py files",
+      "File size between 100 and 50,000 bytes",
+      "Excluded test files and cache directories",
+      "Removed files with < 50 characters"
+    ],
+    "total_files_used": 115
+  },
+  "track_a_pretraining": {
+    "purpose": "Extended pre-training of a language model on raw Python code",
+    "dataset_statistics": {
+      "total_samples": 115,
+      "train_samples": 103,
+      "val_samples": 12
+    },
+    "modeling_results": {}
+  },
+  "track_b_sft": {
+    "purpose": "Instruction fine-tuning on code understanding and generation tasks",
+    "generation_method": "LLM-generated responses with template-based instructions",
+    "llm_used": "Qwen2.5-Coder-1.5B-Instruct",
+    "decoding_parameters": {
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "max_new_tokens": 256
+    },
+    "prompt_templates": {
+      "instruction_variants": {
+        "explain": [
+          "Explain what the following code does.",
+          "Describe the purpose and behavior of this code.",
+          "What functionality does the following code implement?"
+        ],
+        "docstring": [
+          "Write a Python docstring for the following code.",
+          "Add proper documentation to this code."
+        ],
+        "improve": [
+          "Suggest improvements to the following code.",
+          "How can this code be improved or optimized?"
+        ],
+        "test": [
+          "Write unit tests for the following code.",
+          "Generate pytest test cases for this code."
+        ],
+        "refactor": [
+          "Refactor the following code for better readability.",
+          "Rewrite this code following Python best practices."
+        ]
+      },
+      "llm_prompt_structure": [
+        "You are a helpful coding assistant.",
+        "### Instruction:\n{instruction}",
+        "### Code:\n{code}",
+        "### Response:"
+      ]
+    },
+    "dataset_statistics": {
+      "total_pairs": 500,
+      "train_pairs": 450,
+      "test_pairs": 50,
+      "instruction_distribution": {
+        "explain": 100,
+        "docstring": 100,
+        "improve": 100,
+        "test": 100,
+        "refactor": 100
+      }
+    },
+    "modeling_results": {}
+  },
+  "track_c_embeddings": {
+    "purpose": "Text-to-code retrieval using embedding models",
+    "dataset_statistics": {
+      "total_pairs": 197,
+      "train_pairs": 157,
+      "test_pairs": 40
+    },
+    "evaluation_results": {}
+  },
+  "limitations": [
+    "Single-repository dataset",
+    "Synthetic instructions for SFT",
+    "Limited code domain diversity"
+  ]
+}

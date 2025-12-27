@@ -1,0 +1,24 @@
+{
+  "track_a": {
+    "total_samples": 115,
+    "train_samples": 103,
+    "val_samples": 12
+  },
+  "track_b": {
+    "total_pairs": 500,
+    "train_pairs": 450,
+    "test_pairs": 50,
+    "instruction_distribution": {
+      "explain": 100,
+      "docstring": 100,
+      "improve": 100,
+      "test": 100,
+      "refactor": 100
+    }
+  },
+  "track_c": {
+    "total_pairs": 197,
+    "train_pairs": 157,
+    "test_pairs": 40
+  }
+}
