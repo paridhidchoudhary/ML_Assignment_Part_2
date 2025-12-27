@@ -1,0 +1,937 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML Assignment Part 2 - Results Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .metadata {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+
+        .metadata p {
+            margin: 5px 0;
+        }
+
+        .track-section {
+            margin: 40px 0;
+            padding: 20px;
+            border-left: 4px solid #3498db;
+            background: #f8f9fa;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin: 20px 0 10px 0;
+        }
+
+        h4 {
+            color: #7f8c8d;
+            margin: 15px 0 10px 0;
+        }
+
+        .methodology, .metrics, .examples, .insights {
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+
+        .positive {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .negative {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        ul {
+            margin: 10px 0 10px 20px;
+        }
+
+        li {
+            margin: 5px 0;
+        }
+
+        .example-container {
+            margin: 15px 0;
+        }
+
+        .example {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #95a5a6;
+        }
+
+        .example.good {
+            border-left-color: #27ae60;
+        }
+
+        .example.excellent {
+            border-left-color: #27ae60;
+            background: #eafaf1;
+        }
+
+        .example.bad {
+            border-left-color: #e74c3c;
+        }
+
+        .success-note {
+            color: #27ae60;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .error-note {
+            color: #e74c3c;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .toc {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .toc ul {
+            list-style: none;
+            margin: 10px 0;
+        }
+
+        .toc a {
+            color: #2980b9;
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ML Assignment Part 2: Fine-tuning Small Transformer Models</h1>
+
+        <div class="metadata">
+            <p><strong>Report Generated:</strong> 2025-12-27 16:07:06</p>
+            <p><strong>Hardware:</strong> Google Colab T4 GPU</p>
+            <p><strong>Source Code Repo:</strong><a href="https://github.com/psf/requests.git">https://github.com/psf/requests.git</a></p>
+        </div>
+
+        <div class="toc">
+            <h3>Table of Contents</h3>
+            <ul>
+                <li><a href="#track-a">Track A: Extended Pre-training</a></li>
+                <li><a href="#track-b">Track B: Instruction Tuning (SFT)</a></li>
+                <li><a href="#track-c">Track C: Embedding Fine-tuning</a></li>
+            </ul>
+        </div>
+
+        
+    <div class="track-section" id="track-a">
+        <h2>Track A: Extended Pre-training</h2>
+
+        <div class="methodology">
+            <h3>Methodology</h3>
+            <p><strong>Objective:</strong> Continue training a small code language model on a curated code corpus to adapt it to specific coding patterns.</p>
+            <ul>
+                <li><strong>Model:</strong> Qwen/Qwen2.5-Coder-0.5B</li>
+                <li><strong>Dataset:</strong> 103 training samples, 12 validation samples</li>
+                <li><strong>Training Configuration:</strong>
+                    <ul>
+                        <li>Epochs: 2</li>
+                        <li>Batch Size: 1</li>
+                        <li>Training Time: 3.66 minutes</li>
+                    </ul>
+                </li>
+                <li><strong>Objective:</strong> Causal language modeling (next-token prediction)</li>
+                <li><strong>Loss Masking:</strong> Automatic padding token masking via DataCollatorForLanguageModeling</li>
+            </ul>
+        </div>
+
+        <div class="metrics">
+            <h3>Metrics & Results</h3>
+            <table>
+                <tr>
+                    <th>Metric</th>
+                    <th>Baseline (Before Training)</th>
+                    <th>After Training</th>
+                    <th>Improvement</th>
+                </tr>
+                <tr>
+                    <td>Validation Loss</td>
+                    <td>1.6545</td>
+                    <td>1.5809</td>
+                    <td class="positive">
+                        +4.45%
+                    </td>
+                </tr>
+                <tr>
+                    <td>Perplexity</td>
+                    <td>5.2306</td>
+                    <td>4.8593</td>
+                    <td class="positive">
+                        +7.10%
+                    </td>
+                </tr>
+            </table>
+        </div>
+    
+        <div class="examples">
+            <h3>Example Code Completions</h3>
+            <p><em>The model generates code continuations given a context. These examples show the model's ability to understand and continue code patterns.</em></p>
+            <div class="example-container">
+        
+                <div class="example good">
+                    <p><strong>Example 1</strong> | <em>Source: src/requests/utils.py</em></p>
+                    <p><strong>Context (Input):</strong></p>
+                    <pre><code>e.findall(content)
+        + xml_re.findall(content)
+    )
+
+
+def _parse_content_type_header(header):
+    &quot;&quot;&quot;Returns content type and parameters from given header
+
+    :param header: string
+    :return: tuple containing content type and dictionary of
+         parameters
+    &quot;&quot;&quot;
+
+    tokens = header.s</code></pre>
+                    <p><strong>Model Completion:</strong></p>
+                    <pre><code>pli(&quot;.&quot;)
+    content_type, params = tokens.pop(1), {}
+    for key, value in map(str.split, tokens):
+        params[key] = value
+    return content_type, params
+
+
+def parse_content_type_header(header):
+    &quot;&quot;&quot;Returns content type and parameters from given header
+
+    :param header: string
+    :return: tuple containing content type and dictionary of
+         parameters
+    &quot;&quot;&quot;
+
+    return _parse_content_type_header(header)
+
+
+def parse_content_type_from_url(url</code></pre>
+                </div>
+            
+                <div class="example good">
+                    <p><strong>Example 2</strong> | <em>Source: src/requests/models.py</em></p>
+                    <p><strong>Context (Input):</strong></p>
+                    <pre><code>direct,
+        )
+
+    @property
+    def next(self):
+        &quot;&quot;&quot;Returns a PreparedRequest for the next request in a redirect chain, if there is one.&quot;&quot;&quot;
+        return self._next
+
+    @property
+    def apparent_encoding(self):
+        &quot;&quot;&quot;The apparent encoding, provided by the charset_normalizer or ch</code></pre>
+                    <p><strong>Model Completion:</strong></p>
+                    <pre><code>ardet
+        packages, to be used when encoding the response content.
+        &quot;&quot;&quot;
+        encoding = self._encoding
+        if encoding is None:
+            encoding = guess_content_encoding(self.raw)
+        return encoding
+
+    def prepare_request(self, method, url, params=None):
+        &quot;&quot;&quot;Prepares a :class:`PreparedRequest &lt;PreparedRequest&gt;`.
+
+        :param method: (optional) method for the new :class:`PreparedRequest`.
+        :param url: URL</code></pre>
+                </div>
+            
+                <div class="example good">
+                    <p><strong>Example 3</strong> | <em>Source: src/requests/status_codes.py</em></p>
+                    <p><strong>Context (Input):</strong></p>
+                    <pre><code> 408: (&quot;request_timeout&quot;, &quot;timeout&quot;),
+    409: (&quot;conflict&quot;,),
+    410: (&quot;gone&quot;,),
+    411: (&quot;length_required&quot;,),
+    412: (&quot;precondition_failed&quot;, &quot;precondition&quot;),
+    413: (&quot;request_entity_too_large&quot;, &quot;content_too_large&quot;),
+    414: (&quot;request_uri_too_large&quot;, &quot;uri_too_long&quot;),
+    415: (&quot;unsupported_me</code></pre>
+                    <p><strong>Model Completion:</strong></p>
+                    <pre><code>htod&quot;, &quot;content_type&quot;),
+    416: (&quot;expected_content_type&quot;, &quot;content_type&quot;),
+    417: (&quot;etags_malformed&quot;, &quot;etag&quot;),
+    421: (&quot;auth_unverifiable&quot;, &quot;auth&quot;),
+    422: (&quot;unprocessable_entity&quot;, &quot;unprocessable&quot;),
+    423: (&quot;locked&quot;,),
+    424: (&quot;failed_dependency&quot;, &quot;dependency&quot;),
+    425: (&quot;too_many_redirect&quot;,</code></pre>
+                </div>
+            
+            </div>
+        </div>
+        
+        <div class="insights">
+            <h3>Key Insights</h3>
+            <ul>
+                <li>✓ Model perplexity decreased by 7.10%, indicating better language modeling capabilities</li>
+                <li>Lower perplexity suggests the model is better at predicting the next token in the code corpus</li>
+                <li>Training completed efficiently on Google Colab T4 GPU in 3.66 minutes</li>
+            </ul>
+        </div>
+    </div>
+    
+        
+    <div class="track-section" id="track-b">
+        <h2>Track B: Instruction Tuning (Supervised Fine-Tuning)</h2>
+        <div class="methodology">
+            <h3>Methodology</h3>
+            <p>Evaluating lightweight supervised fine-tuning (LoRA) for code understanding.</p>
+            <ul>
+                <li><strong>Model:</strong> Qwen2.5-Coder-0.5B</li>
+                <li><strong>Fine-tuning:</strong> LoRA (parameter-efficient SFT)</li>
+                <li><strong>Instruction Types:</strong> explain, docstring</li>
+            </ul>
+        </div>
+
+        <div class="metrics">
+            <h3>Quantitative Results</h3>
+            <table>
+                <tr><th>Metric</th><th>Baseline</th><th>After LoRA</th><th>Δ</th></tr>
+                <tr>
+                    <td>Pass@5</td>
+                    <td>45.45%</td>
+                    <td>81.82%</td>
+                    <td class="positive">+36.36%</td>
+                </tr>
+                <tr>
+                    <td>Docstring Style Score</td>
+                    <td>0.00%</td>
+                    <td>36.67%</td>
+                    <td class="positive">+36.67%</td>
+                </tr>
+                <tr>
+                    <td>Hallucination Rate</td>
+                    <td>70.91%</td>
+                    <td>45.45%</td>
+                    <td class="positive">-25.45%</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="examples">
+            <h3>Representative Success Cases</h3>
+    
+        <div class="example good">
+            <p><strong>Example 1</strong> | <em>Type: docstring</em></p>
+            <p><strong>Instruction</strong></p>
+            <pre><code>Generate a clear docstring for this code.</code></pre>
+            
+        <details>
+            <summary><strong>Input Code</strong></summary>
+            <pre><code class="python">def generate():
+            # Special case for urllib3.
+            if hasattr(self.raw, &quot;stream&quot;):
+                try:
+                    yield from self.raw.stream(chunk_size, decode_content=True)
+                except ProtocolError as e:
+                    raise ChunkedEncodingError(e)
+                except DecodeError as e:
+                    raise ContentDecodingError(e)
+                except ReadTimeoutError as e:
+                    raise ConnectionError(e)
+                except SSLError as e:
+                    raise RequestsSSLError(e)
+            else:
+                # Standard file-like object.
+                while True:
+                    chunk = self.raw.read(chunk_size)
+                    if not chunk:
+                        break
+                    yield chunk
+
+            self._content_consumed = True</code></pre>
+        </details>
+        
+            
+        <details>
+            <summary><strong>Generated Response (Candidate 1)</strong></summary>
+            <pre><code class="">&quot;&quot;&quot;
+    Generates a generator for reading data from an HTTP response object.
+
+    Args:
+        self (Response): The HTTP response object.
+
+    Yields:
+        bytes: The data read from the response.
+    &quot;&quot;&quot;</code></pre>
+        </details>
+        
+        </div>
+        
+        <div class="example good">
+            <p><strong>Example 2</strong> | <em>Type: docstring</em></p>
+            <p><strong>Instruction</strong></p>
+            <pre><code>Generate a clear docstring for this code.</code></pre>
+            
+        <details>
+            <summary><strong>Input Code</strong></summary>
+            <pre><code class="python">def prepend_scheme_if_needed(url, new_scheme):
+    &quot;&quot;&quot;Given a URL that may or may not have a scheme, prepend the given scheme.
+    Does not replace a present scheme with the one provided as an argument.
+
+    :rtype: str
+    &quot;&quot;&quot;
+    parsed = parse_url(url)
+    scheme, auth, host, port, path, query, fragment = parsed
+
+    # A defect in urlparse determines that there isn&#39;t a netloc present in some
+    # urls. We previously assumed parsing was overly cautious, and swapped the
+    # netloc and path. Due to a lack of tests on the original defect, this is
+    # maintained with parse_url for backwards compatibility.
+    netloc = parsed.netloc
+    if not netloc:
+        netloc, path = path, netloc
+
+    if auth:
+        # parse_url doesn&#39;t provide the netloc with auth
+        # so we&#39;ll add it ourselves.
+        netloc = &quot;@&quot;.join([auth, netloc])
+    if scheme is None:
+        scheme = new_scheme
+    if path is None:
+        path = &quot;&quot;
+
+    return urlunparse((scheme, netloc, path, &quot;&quot;, query, fragment))</code></pre>
+        </details>
+        
+            
+        <details>
+            <summary><strong>Generated Response (Candidate 2)</strong></summary>
+            <pre><code class="">&quot;&quot;&quot;
+Given a URL that may or may not have a scheme, prepend the given scheme.
+Does not replace a present scheme with the one provided as an argument.
+
+:param url: The URL to prepend the scheme to.
+:param new_scheme: The new scheme to prepend.
+:return: The URL with the new scheme prepended.
+&quot;&quot;&quot;</code></pre>
+        </details>
+        
+        </div>
+        
+        <div class="example good">
+            <p><strong>Example 3</strong> | <em>Type: docstring</em></p>
+            <p><strong>Instruction</strong></p>
+            <pre><code>Write a Python docstring for the following code.</code></pre>
+            
+        <details>
+            <summary><strong>Input Code</strong></summary>
+            <pre><code class="python">def update(self, other):
+        &quot;&quot;&quot;Updates this jar with cookies from another CookieJar or dict-like&quot;&quot;&quot;
+        if isinstance(other, cookielib.CookieJar):
+            for cookie in other:
+                self.set_cookie(copy.copy(cookie))
+        else:
+            super().update(other)</code></pre>
+        </details>
+        
+            
+        <details>
+            <summary><strong>Generated Response (Candidate 3)</strong></summary>
+            <pre><code class="">&quot;&quot;&quot;
+Updates this jar with cookies from another CookieJar or dict-like
+
+Parameters:
+    other (cookiejar.CookieJar or dict): A CookieJar or dictionary containing cookie data.
+&quot;&quot;&quot;</code></pre>
+        </details>
+        
+        </div>
+        
+        <div class="example good">
+            <p><strong>Example 4</strong> | <em>Type: docstring</em></p>
+            <p><strong>Instruction</strong></p>
+            <pre><code>Write a Python docstring for the following code.</code></pre>
+            
+        <details>
+            <summary><strong>Input Code</strong></summary>
+            <pre><code class="python">def list_domains(self):
+        &quot;&quot;&quot;Utility method to list all the domains in the jar.&quot;&quot;&quot;
+        domains = []
+        for cookie in iter(self):
+            if cookie.domain not in domains:
+                domains.append(cookie.domain)
+        return domains</code></pre>
+        </details>
+        
+            
+        <details>
+            <summary><strong>Generated Response (Candidate 4)</strong></summary>
+            <pre><code class="">&quot;&quot;&quot;
+Utility method to list all the domains in the jar.
+
+Args:
+    self: The jar object.
+
+Returns:
+    A list of domains found in the jar.
+
+Example:
+    &gt;&gt;&gt; jar = Jar()
+    &gt;&gt;&gt; jar.add_cookie(&quot;domain1.example.com&quot;)
+    &gt;&gt;&gt; jar.add_cookie(&quot;domain2.example.com&quot;)
+    &gt;&gt;&gt; domains = jar.list_domains()
+    &gt;&gt;&gt; print(domains)
+    [&#39;domain1.example.com&#39;, &#39;domain2.example.com&#39;]
+
+&quot;&quot;&quot;</code></pre>
+        </details>
+        
+        </div>
+        <h3>Representative Failure Cases</h3>
+        <div class="example bad">
+            <p><strong>Example 1</strong> | <em>Type: docstring</em></p>
+            <p><strong>Instruction</strong></p>
+            <pre><code>Generate a clear docstring for this code.</code></pre>
+            
+        <details>
+            <summary><strong>Input Code</strong></summary>
+            <pre><code class="python">def generate():
+            # Special case for urllib3.
+            if hasattr(self.raw, &quot;stream&quot;):
+                try:
+                    yield from self.raw.stream(chunk_size, decode_content=True)
+                except ProtocolError as e:
+                    raise ChunkedEncodingError(e)
+                except DecodeError as e:
+                    raise ContentDecodingError(e)
+                except ReadTimeoutError as e:
+                    raise ConnectionError(e)
+                except SSLError as e:
+                    raise RequestsSSLError(e)
+            else:
+                # Standard file-like object.
+                while True:
+                    chunk = self.raw.read(chunk_size)
+                    if not chunk:
+                        break
+                    yield chunk
+
+            self._content_consumed = True</code></pre>
+        </details>
+        
+            
+        <details>
+            <summary><strong>Generated Response (Candidate 1)</strong></summary>
+            <pre><code class="">&quot;&quot;&quot;
+    Generates a generator for reading data from an HTTP response object.
+
+    Args:
+        self (Response): The HTTP response object.
+
+    Yields:
+        bytes: The data read from the response.
+    &quot;&quot;&quot;</code></pre>
+        </details>
+        
+        </div>
+        
+        <div class="example bad">
+            <p><strong>Example 2</strong> | <em>Type: explain</em></p>
+            <p><strong>Instruction</strong></p>
+            <pre><code>Describe the purpose and behavior of this code.</code></pre>
+            
+        <details>
+            <summary><strong>Input Code</strong></summary>
+            <pre><code class="python">def rebuild_auth(self, prepared_request, response):
+        &quot;&quot;&quot;When being redirected we may want to strip authentication from the
+        request to avoid leaking credentials. This method intelligently removes
+        and reapplies authentication where possible to avoid credential loss.
+        &quot;&quot;&quot;
+        headers = prepared_request.headers
+        url = prepared_request.url
+
+        if &quot;Authorization&quot; in headers and self.should_strip_auth(
+            response.request.url, url
+        ):
+            # If we get redirected to a new host, we should strip out any
+            # authentication headers.
+            del headers[&quot;Authorization&quot;]
+
+        # .netrc might have more auth for us on our new host.
+        new_auth = get_netrc_auth(url) if self.trust_env else None
+        if new_auth is not None:
+            prepared_request.prepare_auth(new_auth)</code></pre>
+        </details>
+        
+            
+        <details>
+            <summary><strong>Generated Response (Candidate 2)</strong></summary>
+            <pre><code class="">To understand the purpose and behavior of the `rebuild_auth` method, let&#39;s break down its functionality step by step:
+
+1. Receiving Request and Response Objects: The method takes two parameters: `prepared_request` (the request that will be reconfigured) and `response` (the response that will be applied to the request).
+
+2. Headers Mapping: The method iterates through the headers of the prepared request and checks for specific headers that indicate authentication (e.g., &quot;Authorization&quot;).
+
+3. Authentication Removal: If the method detects the presence of any of these authentication headers, it removes them from the headers dictionary. The exact behavior depends on the specific implementation of this method.
+
+4. Authentication Reapplication: If authentication headers are removed, the method calls the `prepare_auth` method on the prepared request. The `prepare_auth` method checks if the current request URL matches the expected URL based on the existing headers. If the headers match, it re-applies the authentication.
+
+5. Environment Trust: If the method trusts environment variables, it retrieves the netrc authentication information for the specified URL. This is useful for handling authentication issues where the credentials are stored in a file rather than in the environment.
+
+6. Netrc Authentication: The `get_netrc_auth` function</code></pre>
+        </details>
+        
+        </div>
+        
+        <div class="example bad">
+            <p><strong>Example 3</strong> | <em>Type: explain</em></p>
+            <p><strong>Instruction</strong></p>
+            <pre><code>Describe the purpose and behavior of this code.</code></pre>
+            
+        <details>
+            <summary><strong>Input Code</strong></summary>
+            <pre><code class="python">def get_encoding_from_headers(headers):
+    &quot;&quot;&quot;Returns encodings from given HTTP Header Dict.
+
+    :param headers: dictionary to extract encoding from.
+    :rtype: str
+    &quot;&quot;&quot;
+
+    content_type = headers.get(&quot;content-type&quot;)
+
+    if not content_type:
+        return None
+
+    content_type, params = _parse_content_type_header(content_type)
+
+    if &quot;charset&quot; in params:
+        return params[&quot;charset&quot;].strip(&quot;&#39;\&quot;&quot;)
+
+    if &quot;text&quot; in content_type:
+        return &quot;ISO-8859-1&quot;
+
+    if &quot;application/json&quot; in content_type:
+        # Assume UTF-8 based on RFC 4627: https://www.ietf.org/rfc/rfc4627.txt since the charset was unset
+        return &quot;utf-8&quot;</code></pre>
+        </details>
+        
+            
+        <details>
+            <summary><strong>Generated Response (Candidate 3)</strong></summary>
+            <pre><code class="">The purpose of this code is to extract and return the encoding from a given HTTP header dictionary. It takes into account different types of encodings, such as character sets and JSON, and returns the appropriate encoding based on the provided header. If the header does not contain any encoding information, it returns None. The function uses the `requests` library to parse the content type header and extracts the charset parameter, which is used to determine the encoding.</code></pre>
+        </details>
+        
+        </div>
+        </div></div>
+        
+    <div class="track-section" id="track-c">
+        <h2>Track C: Embedding Fine-tuning</h2>
+
+        <div class="methodology">
+            <h3>Methodology</h3>
+            <p><strong>Objective:</strong> Adapt a small embedding model for text → code retrieval tasks.</p>
+            <ul>
+                <li><strong>Model:</strong> sentence-transformers/all-MiniLM-L6-v2</li>
+                <li><strong>Dataset:</strong>
+                    <ul>
+                        <li>162 text-code pairs derived from Track B data</li>
+                        <li>129 training pairs, 33 test pairs</li>
+                        <li>Query: Shortened explanations/docstrings (max 12 words)</li>
+                        <li>Code: Original function/class implementations</li>
+                    </ul>
+                </li>
+                <li><strong>Training:</strong>
+                    <ul>
+                        <li>Loss Function: Multiple Negatives Ranking Loss</li>
+                        <li>Epochs: 3</li>
+                        <li>Batch Size: 16</li>
+                        <li>Learning Rate: 2e-5</li>
+                    </ul>
+                </li>
+                <li><strong>Evaluation:</strong> Retrieval from global corpus of 162 code snippets</li>
+            </ul>
+        </div>
+
+        <div class="metrics">
+            <h3>Metrics & Results</h3>
+            <table>
+                <tr>
+                    <th>Metric</th>
+                    <th>Baseline</th>
+                    <th>After Fine-tuning</th>
+                    <th>Improvement</th>
+                </tr>
+                <tr>
+                    <td>MRR@10</td>
+                    <td>0.4455</td>
+                    <td>0.4785</td>
+                    <td class="positive">
+                        +0.0331 (+7.4%)
+                    </td>
+                </tr>
+                <tr>
+                    <td>nDCG@10</td>
+                    <td>0.5154</td>
+                    <td>0.5480</td>
+                    <td class="positive">
+                        +0.0327 (+6.3%)
+                    </td>
+                </tr>
+                <tr>
+                    <td>Recall@10</td>
+                    <td>0.7273</td>
+                    <td>0.7576</td>
+                    <td class="positive">
+                        +0.0303 (+4.2%)
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="examples">
+            <h3>Retrieval Examples</h3>
+
+            <h4>✓ Good Retrievals (Low Rank = Successful)</h4>
+            <div class="example-container">
+    
+                <div class="example excellent">
+                    <p><strong>Example 1</strong> | <em>Rank: 0</em> | <em>Type: docstring</em></p>
+                    <p><strong>Query:</strong> &quot;&quot;&quot;Returns True if :attr:`status_code` is less than 400, False if not. This</p>
+                    <p><strong>Retrieved Code:</strong></p>
+                    <pre><code>def ok(self):
+        &quot;&quot;&quot;Returns True if :attr:`status_code` is less than 400, False if not.
+
+        This attribute checks if the status code of the response is between
+        400 and 600 to see if there was a client error or a server error. If
+        the status code is between 200 and 400, this will return True. This
+        is **not** a check to see if the response code is ``200 OK``.
+        &quot;&quot;&quot;
+        try:
+            self.raise_for_status()
+        except HTTPError:
+            return F...</code></pre>
+                    <p class="success-note">✓ Correct code retrieved at position 0 (excellent ranking)</p>
+                </div>
+        
+                <div class="example excellent">
+                    <p><strong>Example 2</strong> | <em>Rank: 0</em> | <em>Type: explain</em></p>
+                    <p><strong>Query:</strong> 2. Comparison Logic: Inside the method, an `all` function is used to</p>
+                    <p><strong>Retrieved Code:</strong></p>
+                    <pre><code>def __eq__(self, other):
+        return all(
+            [
+                self.username == getattr(other, &quot;username&quot;, None),
+                self.password == getattr(other, &quot;password&quot;, None),
+            ]
+        )</code></pre>
+                    <p class="success-note">✓ Correct code retrieved at position 0 (excellent ranking)</p>
+                </div>
+        
+                <div class="example excellent">
+                    <p><strong>Example 3</strong> | <em>Rank: 0</em> | <em>Type: docstring</em></p>
+                    <p><strong>Query:</strong> &quot;&quot;&quot;Prepare Content-Length header based on request method and body&quot;&quot;&quot;</p>
+                    <p><strong>Retrieved Code:</strong></p>
+                    <pre><code>def prepare_content_length(self, body):
+        &quot;&quot;&quot;Prepare Content-Length header based on request method and body&quot;&quot;&quot;
+        if body is not None:
+            length = super_len(body)
+            if length:
+                # If length exists, set it. Otherwise, we fallback
+                # to Transfer-Encoding: chunked.
+                self.headers[&quot;Content-Length&quot;] = builtin_str(length)
+        elif (
+            self.method not in (&quot;GET&quot;, &quot;HEAD&quot;)
+            and self.headers.get(&quot;Content-Lengt...</code></pre>
+                    <p class="success-note">✓ Correct code retrieved at position 0 (excellent ranking)</p>
+                </div>
+        
+            </div>
+
+            <h4>✗ Poor Retrievals (High Rank = Failed)</h4>
+            <div class="example-container">
+    
+                <div class="example bad">
+                    <p><strong>Example 1</strong> | <em>Rank: 26</em> | <em>Type: explain</em></p>
+                    <p><strong>Query:</strong> 2. Parameters: - `request`: The `PreparedRequest` object that contains all necessary details</p>
+                    <p><strong>Retrieved Code:</strong></p>
+                    <pre><code>def send(
+        self, request, stream=False, timeout=None, verify=True, cert=None, proxies=None
+    ):
+        &quot;&quot;&quot;Sends PreparedRequest object. Returns Response object.
+
+        :param request: The :class:`PreparedRequest &lt;PreparedRequest&gt;` being sent.
+        :param stream: (optional) Whether to stream the request content.
+        :param timeout: (optional) How long to wait for the server to send
+            data before giving up, as a float, or a :ref:`(connect timeout,
+            read time...</code></pre>
+                    <p class="error-note">✗ Correct code ranked at position 26 (should be in top 10)</p>
+                    <p><strong>Issue:</strong> Query may be too generic or code semantics not captured well by embeddings</p>
+                </div>
+        
+                <div class="example bad">
+                    <p><strong>Example 2</strong> | <em>Rank: 29</em> | <em>Type: explain</em></p>
+                    <p><strong>Query:</strong> To understand the functionality of the given code, we need to analyze</p>
+                    <p><strong>Retrieved Code:</strong></p>
+                    <pre><code>def links(self):
+        &quot;&quot;&quot;Returns the parsed header links of the response, if any.&quot;&quot;&quot;
+
+        header = self.headers.get(&quot;link&quot;)
+
+        resolved_links = {}
+
+        if header:
+            links = parse_header_links(header)
+
+            for link in links:
+                key = link.get(&quot;rel&quot;) or link.get(&quot;url&quot;)
+                resolved_links[key] = link
+
+        return resolved_links</code></pre>
+                    <p class="error-note">✗ Correct code ranked at position 29 (should be in top 10)</p>
+                    <p><strong>Issue:</strong> Query may be too generic or code semantics not captured well by embeddings</p>
+                </div>
+        
+                <div class="example bad">
+                    <p><strong>Example 3</strong> | <em>Rank: 33</em> | <em>Type: explain</em></p>
+                    <p><strong>Query:</strong> To provide a detailed response, I&#39;ll break down the code&#39;s functionality into</p>
+                    <p><strong>Retrieved Code:</strong></p>
+                    <pre><code>def dispatch_hook(key, hooks, hook_data, **kwargs):
+    &quot;&quot;&quot;Dispatches a hook dictionary on a given piece of data.&quot;&quot;&quot;
+    hooks = hooks or {}
+    hooks = hooks.get(key)
+    if hooks:
+        if hasattr(hooks, &quot;__call__&quot;):
+            hooks = [hooks]
+        for hook in hooks:
+            _hook_data = hook(hook_data, **kwargs)
+            if _hook_data is not None:
+                hook_data = _hook_data
+    return hook_data</code></pre>
+                    <p class="error-note">✗ Correct code ranked at position 33 (should be in top 10)</p>
+                    <p><strong>Issue:</strong> Query may be too generic or code semantics not captured well by embeddings</p>
+                </div>
+        
+            </div>
+        </div>
+
+        <div class="insights">
+            <h3>Key Insights</h3>
+            <ul>
+                <li>MRR@10 improved by 7.4%, indicating better ranking quality</li>
+                <li>Recall@10 improved by 4.2%, showing more relevant items retrieved</li>
+                <li>Fine-tuning with Multiple Negatives Ranking Loss effectively adapts embeddings for code retrieval</li>
+                <li>Model struggles with queries containing generic terms or very specific implementation details</li>
+                <li>Since Track C dataset has been derived from Track B responses, the queries are not very appropriate, for better results, generating synthetic dataset would be better, however, due to time and compute constraints, that has been kept as a future work</li>
+            </ul>
+        </div>
+    </div>
+    
+
+        <div class="track-section">
+            <h2>Overall Conclusions</h2>
+            <ul>
+                <li>All three tracks demonstrated measurable improvements after fine-tuning</li>
+                <li>LoRA proved to be an efficient method for instruction tuning with minimal parameters</li>
+                <li>Embedding fine-tuning significantly improved code retrieval capabilities</li>
+                <li>Dataset for Track C has been derived from Track B responses (used as query, truncated), so it is not perfect. Generating Synthetic dataset required more compute.</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+    
